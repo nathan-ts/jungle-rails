@@ -4,6 +4,14 @@
     <h1>My Cart</h1>
   </header>
 
+  <%# Check if cart is empty; if so, do not show contents and show link to homepage %>
+  <% if enhanced_cart.length == 0 %>
+  <div class="alert alert-info" role="alert">
+    Hey, your cart is empty! Go <a href='/'>here</a> to start shopping.
+  </div>
+
+  <% else %>
+
   <div class="panel panel-default items">
     <table class="table table-bordered">
       <thead>
@@ -29,7 +37,7 @@
           </th>
         </tr>
       </tfoot>
-    </table>
+    </table>  
   </div>
 
   <div class="row">
@@ -48,5 +56,7 @@
       <% end %>
     </div>
   </div>
+
+  <% end %>
 
 </section>
