@@ -7,13 +7,14 @@
     </h1>
   <% end%>
   <div>
-    <% puts "#{product.name} quantity: #{product.quantity}" %>
+    <%# Show Soldout badge if qty is 0, and disable add to cart%>
     <% if product.quantity == 0 %>
       <button class="soldout" type="text">Sold Out</button>
       <%= button_to add_item_cart_path(product_id: product.id), class: 'btn', disabled: true,
       method: :post do %>
         <%= fa_icon "shopping-cart", text: 'Add' %> 
       <% end %>
+    <%# Otherwise, show Add to cart button %>
     <% else %>
       <%= button_to add_item_cart_path(product_id: product.id), class: 'btn' ,
       method: :post do %>
