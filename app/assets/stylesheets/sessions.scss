@@ -1,3 +1,14 @@
 // Place all the styles related to the Sessions controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+
+.login-form > form {
+  display: flex; 
+  flex-direction: column;
+  min-width: 20em;
+  width: 40vh;
+}
+
+input[type="submit"] {
+  margin-top: 0.5em;
+}
