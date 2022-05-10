@@ -34,7 +34,7 @@
         <li class="nav-link">
           <%# Get current user, or show login/signup links %>
           <% if current_user %>
-            Signed in as <%= current_user.name %> | <%= link_to "Logout", '/logout', style: "color: rgba(255, 255, 255, 0.55); text-decoration: none"  %>
+            Signed in as <%= current_user.first_name %> <%= current_user.last_name %> | <%= link_to "Logout", '/logout', style: "color: rgba(255, 255, 255, 0.55); text-decoration: none"  %>
           <% else %>
             <%= link_to 'Login', '/login', style: "color: rgba(255, 255, 255, 0.55); text-decoration: none" 
             %> | <%= link_to 'Signup', '/signup', style: "color: rgba(255, 255, 255, 0.55); text-decoration: none" 
