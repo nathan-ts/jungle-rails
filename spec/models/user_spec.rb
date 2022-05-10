@@ -14,38 +14,104 @@ RSpec.describe User, type: :model do
         @userNoPw = User.create(
           :first_name => "Inori", 
           :last_name => "Yuzuriha", 
-          :email => "singersword@funeralparlour.com", 
+          :email => "swordofthesinger@funeralparlour.com", 
+          :password_confirmation => "ohmyshoe"
         )
-        @userPwConfirm = User.create(
+        @userNoPwConfirm = User.create(
+          :first_name => "Inori", 
+          :last_name => "Yuzuriha", 
+          :email => "swordofthesinger@funeralparlour.com", 
+          :password => "ohmyshoe"
+        )
+        @userPwConfirmMismatch = User.create(
+          :first_name => "Inori", 
+          :last_name => "Yuzuriha", 
+          :email => "swordofthesinger@funeralparlour.com", 
+          :password => "ohmyshoe",
+          :password_confirmation => "ohmamana"
+        )
+        @userDupeEmail = User.create(
           :first_name => "Inori", 
           :last_name => "Yuzuriha", 
           :email => "singersword@funeralparlour.com", 
           :password => "ohmyshoe",
-          :password_confirmation => "ohmamana"
+          :password_confirmation => "ohmyshoe"
+        )
+        @userNoEmail = User.create(
+          :first_name => "Inori", 
+          :last_name => "Yuzuriha", 
+          :password => "ohmyshoe",
+          :password_confirmation => "ohmyshoe"
+        )
+        @userNoFirst = User.create(
+          :last_name => "Yuzuriha",
+          :email => "swordofthesinger@funeralparlour.com", 
+          :password => "ohmyshoe",
+          :password_confirmation => "ohmyshoe"
+        )
+        @userNoLast = User.create(
+          :first_name => "Inori", 
+          :email => "swordofthesinger@funeralparlour.com", 
+          :password => "ohmyshoe",
+          :password_confirmation => "ohmyshoe"
+        )
+        @userPwSort = User.create(
+          :first_name => "Inori", 
+          :last_name => "Yuzuriha", 
+          :email => "swordofthesinger@funeralparlour.com", 
+          :password => "ohmy",
+          :password_confirmation => "ohmy"
         )
       end
 
-      describe "user" do
+      describe "user correct params validation" do
         it "creates a user successfully when all fields are provided correctly" do
           expect(@userAllGood).to be_a_kind_of User
         end
       end
 
-      describe "user" do
-        it "provides an appropriate error when password and/or pw confirmation are not provided" do
+      describe "user incorrect params validation" do
+        it "provides an appropriate error when password is not provided" do
           expect(@userNoPw.errors.full_messages).to include "Password can't be blank"
         end
 
-        xit "provides an appropriate error when password does not match pw confirmation" do
-          $stderr.puts "user pw != pw confirm"
-          expect(@userPwConfirm.errors.full_messages).to include "Password and Password Confirmation do not match"
+        it "provides an appropriate error when password confirmation is not provided" do
+          expect(@userNoPwConfirm.errors.full_messages).to include "Password confirmation can't be blank"
+        end
+
+        it "provides an appropriate error when password does not match password confirmation" do
+          expect(@userPwConfirmMismatch.errors.full_messages).to include "Password confirmation doesn't match Password"
+        end
+
+        it "provides an appropriate error when email already exists" do
+          expect(@userDupeEmail.errors.full_messages).to include "Email has already been taken"
+        end
+
+        it "provides an appropriate error when email is not provided" do
+          expect(@userNoEmail.errors.full_messages).to include "Email can't be blank"
+        end
+
+        it "provides an appropriate error when first name is not provided" do
+          expect(@userNoFirst.errors.full_messages).to include "First name can't be blank"
+        end
+
+        it "provides an appropriate error when last name is not provided" do
+          expect(@userNoLast.errors.full_messages).to include "Last name can't be blank"
         end
       end
 
+
+      describe "user further incorrect params validation" do
+        it "provides an appropriate error when password is shorter than min length" do
+          expect(@userPwSort.errors.full_messages).to include "Password is too short (minimum is 8 characters)"
+        end
+      end
+
+      # $stderr.puts "user pw != pw confirm"
+      # $stderr.puts @userPwConfirm.errors.full_messages
+
       after(:all) do
         @userAllGood.destroy
-        @userNoPw.destroy
-        @userPwConfirm.destroy
       end
     end
   end
