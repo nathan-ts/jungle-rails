@@ -100,18 +100,58 @@ RSpec.describe User, type: :model do
         end
       end
 
-
       describe "user further incorrect params validation" do
         it "provides an appropriate error when password is shorter than min length" do
           expect(@userPwSort.errors.full_messages).to include "Password is too short (minimum is 8 characters)"
         end
       end
 
-      # $stderr.puts "user pw != pw confirm"
-      # $stderr.puts @userPwConfirm.errors.full_messages
-
       after(:all) do
         @userAllGood.destroy
+      end
+    end
+  end
+
+  describe '.authenticate_with_credentials' do
+    describe "#login" do
+      before(:all) do
+        @user = User.create(
+          :first_name => "Inori", 
+          :last_name => "Yuzuriha", 
+          :email => "singersword@funeralparlour.com", 
+          :password => "ohmyshoe",
+          :password_confirmation => "ohmyshoe"
+        )
+      end
+
+      describe "user correct credentials validation" do
+        it "logs in when correct credentials are passed in" do
+          expect(User.authenticate_with_credentials(@user.email, @user.password)).to be_a_kind_of User
+        end
+      end
+
+      describe "user incorrect credentials validation" do
+        it "provides an appropriate error when email is incorrect" do
+          expect(User.authenticate_with_credentials("inori@funeral", @user.password)).to be_nil
+        end
+
+        it "provides an appropriate error when password is incorrect" do
+          expect(User.authenticate_with_credentials(@user.email,"yuzuriha")).to be_nil
+        end
+      end
+
+      describe "user edge case email validation" do
+        it "logs in when email with leading and/or trailing whitespace is provided" do
+          expect(User.authenticate_with_credentials("     singersword@funeralparlour.com  ", @user.password)).to be_a_kind_of User
+        end
+
+        it "logs in when email with inconsistent case is provided" do
+          expect(User.authenticate_with_credentials("SingerSword@FuneralParlour.com", @user.password)).to be_a_kind_of User
+        end
+      end
+      
+      after(:all) do
+        @user.destroy
       end
     end
   end
